@@ -17,9 +17,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2qBTR4E70PdyjEZUi9m4KpmIi0U" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -29,7 +29,7 @@
   "keyToString": {
     "Node.js.server.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Sergio/Documents/Ingenieria en sistemas/Noveno semestre/electiva 2/Segundo corte/Proyecto/gestion-presupuestal-frontend",
+    "last_opened_file_path": "C:/Users/Sergio/Documents/GitHub/Proyecto-Final/gestion-presupuestal-frontend-corrected",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -59,7 +59,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734134956878</updated>
-      <workItem from="1734134957963" duration="14663000" />
+      <workItem from="1734134957963" duration="17309000" />
+      <workItem from="1734295580016" duration="17000" />
     </task>
     <servers />
   </component>
