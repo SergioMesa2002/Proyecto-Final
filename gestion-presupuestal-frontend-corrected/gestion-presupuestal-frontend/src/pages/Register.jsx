@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/authService';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -72,6 +73,14 @@ const Register = () => {
                 </label>
                 <br />
                 <button type="submit">Registrarse</button>
+
+                <h2>Ir a otras vistas:</h2>
+                  <Link to="/CreateDepartment">
+                    <button>Ir a Departamentos</button>
+                  </Link>
+                  <Link to="/createBudget">
+                    <button>Ir a Presupuesto</button>
+                  </Link>
             </form>
         </div>
     );

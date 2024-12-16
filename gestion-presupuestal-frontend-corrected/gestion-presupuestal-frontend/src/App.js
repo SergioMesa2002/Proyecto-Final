@@ -7,6 +7,8 @@ import ActivitiesPanel from './pages/ActivitiesPanel'; // Ruta adicional si mane
 import CreateBudget from './components/createBudget';
 import CreateDepartment from './components/CreateDepartment';
 import CreateActivity from './components/CreateActivity';
+import BudgetPieChart from './components/BudgetPieChart';
+
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -54,6 +56,7 @@ const App = () => {
                    <Route path="createBudget" element={<CreateBudget/>} />
                    <Route path="createDepartment" element={<CreateDepartment/>} />
                    <Route path="createActivity" element={<CreateActivity/>} />
+                   <Route path="budgetpie" element={<BudgetPieChart/>} />
                    
             </Routes>
         </Router>

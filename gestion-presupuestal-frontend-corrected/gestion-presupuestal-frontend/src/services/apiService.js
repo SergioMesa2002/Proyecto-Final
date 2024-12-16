@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/budgets'; // Aquí se ajusta la URL base
+const API_URL = 'https://backend-proyectofinal-4qkh.onrender.com/budgets'; // Aquí se ajusta la URL base
 
 // Función para obtener el token JWT almacenado
 const getAuthToken = () => {

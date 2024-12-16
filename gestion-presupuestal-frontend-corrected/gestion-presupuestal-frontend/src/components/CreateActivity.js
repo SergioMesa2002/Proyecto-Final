@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/formulario.css'
+import { Link } from 'react-router-dom';
+import '../styles/formulario.css';
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
@@ -11,22 +12,22 @@ const Activities = () => {
   // Obtener actividades por departamento
   const fetchActivities = async (departmentId) => {
     if (!departmentId) {
-        console.error('El ID del departamento no es válido');
-        return;
+      console.error('El ID del departamento no es válido');
+      return;
     }
 
     try {
-        const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/${departmentId}`);
-        if (!response.ok) {
-            const errorData = await response.json();  // Obtener detalles del error
-            throw new Error(errorData.error || 'No se pudieron obtener las actividades');
-        }
-        const data = await response.json();
-        setActivities(data);
+      const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/${departmentId}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'No se pudieron obtener las actividades');
+      }
+      const data = await response.json();
+      setActivities(data);
     } catch (error) {
-        console.error('Error al obtener las actividades:', error.message);
+      console.error('Error al obtener las actividades:', error.message);
     }
-};
+  };
 
   // Obtener departamentos
   const fetchDepartments = async () => {
@@ -148,11 +149,7 @@ const Activities = () => {
     <div>
       <h1>Gestión de Actividades</h1>
       <button onClick={() => openModal()}>Crear Actividad</button>
-      <select
-        onChange={(e) => fetchActivities(e.target.value)}
-        value={activityData.departmentId}
-        required
-      >
+      <select onChange={(e) => fetchActivities(e.target.value)} value={activityData.departmentId} required>
         <option value="">Seleccionar Departamento</option>
         {departments.map((department) => (
           <option key={department._id} value={department._id}>
@@ -160,6 +157,18 @@ const Activities = () => {
           </option>
         ))}
       </select>
+
+      {/* Botones de redirección a otras vistas */}
+      <div>
+  <h2>Ir a otras vistas:</h2>
+  <Link to="/CreateDepartment">
+    <button>Ir a Departamentos</button>
+  </Link>
+  <Link to="/createBudget">
+    <button>Ir a Presupuesto</button>
+  </Link>
+</div>
+
       <table>
         <thead>
           <tr>
@@ -190,40 +199,19 @@ const Activities = () => {
           <form onSubmit={handleSubmit}>
             <label>
               Nombre:
-              <input
-                type="text"
-                name="name"
-                value={activityData.name}
-                onChange={handleChange}
-                required
-              />
+              <input type="text" name="name" value={activityData.name} onChange={handleChange} required />
             </label>
             <label>
               Presupuesto:
-              <input
-                type="number"
-                name="budget"
-                value={activityData.budget}
-                onChange={handleChange}
-                required
-              />
+              <input type="number" name="budget" value={activityData.budget} onChange={handleChange} required />
             </label>
             <label>
               Descripción:
-              <textarea
-                name="description"
-                value={activityData.description}
-                onChange={handleChange}
-              />
+              <textarea name="description" value={activityData.description} onChange={handleChange} />
             </label>
             <label>
               Departamento:
-              <select
-                name="departmentId"
-                value={activityData.departmentId}
-                onChange={handleChange}
-                required
-              >
+              <select name="departmentId" value={activityData.departmentId} onChange={handleChange} required>
                 <option value="">Seleccionar Departamento</option>
                 {departments.map((department) => (
                   <option key={department._id} value={department._id}>

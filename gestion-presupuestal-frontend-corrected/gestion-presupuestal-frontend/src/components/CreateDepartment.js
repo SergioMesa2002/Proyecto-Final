@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/formulario.css';
 
 const Departments = () => {
@@ -121,6 +122,16 @@ const Departments = () => {
   return (
     <div>
       <h1>Gestión de Departamentos</h1>
+
+<h2>Ir a otras vistas:</h2>
+      <Link to="/createBudget">
+        <button>Ir a presupuestos</button>
+      </Link>
+      <Link to="/CreateActivity">
+        <button>Ir a actividades</button>
+      </Link>
+    
+
       <button onClick={() => openModal()}>Crear Departamento</button>
       <table>
         <thead>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/formulario.css'
 
 const Budgets = () => {
@@ -79,7 +80,7 @@ const Budgets = () => {
     if (!window.confirm('¿Estás seguro de eliminar este presupuesto?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/budgets/${id}`, {
+      const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/budgets/${id}`, {
         method: 'DELETE',
       });
 
@@ -121,6 +122,18 @@ const Budgets = () => {
   return (
     <div>
       <h1>Gestión de Presupuestos</h1>
+    
+
+    <h2>Ir a otras vistas:</h2>
+      <Link to="/CreateDepartment">
+        <button>Ir a Departamentos</button>
+      </Link>
+      <Link to="/CreateActivity">
+        <button>Ir a actividades</button>
+      </Link>
+    
+
+
       <button onClick={() => openModal()}>Crear Presupuesto</button>
       <table>
         <thead>
