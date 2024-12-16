@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ActivitiesPanel from './pages/ActivitiesPanel'; // Ruta adicional si manejas actividades
+import CreateBudget from './components/createBudget';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -48,6 +49,7 @@ const App = () => {
                     path="*"
                     element={<h1 style={{ textAlign: 'center', marginTop: '20px' }}>404 - Página no encontrada</h1>}
                 />
+                   <Route path="createBudget" element={<CreateBudget/>} />
             </Routes>
         </Router>
     );
