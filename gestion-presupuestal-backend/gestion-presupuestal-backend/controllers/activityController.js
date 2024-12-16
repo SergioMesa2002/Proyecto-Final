@@ -11,6 +11,11 @@ const createActivity = async (req, res) => {
         return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
+    // Validar que el presupuesto sea un número positivo
+    if (isNaN(budget) || budget <= 0) {
+        return res.status(400).json({ error: 'El presupuesto debe ser un número positivo' });
+    }
+
     try {
         // Verificar que el departmentId sea un ObjectId válido
         if (!mongoose.Types.ObjectId.isValid(departmentId)) {
@@ -49,7 +54,6 @@ const createActivity = async (req, res) => {
 };
 
 // Obtener actividades por departamento
-// Obtener actividades por departamento
 const getActivitiesByDepartment = async (req, res) => {
     const { departmentId } = req.params; // Capturar el ID del departamento desde los parámetros
 
@@ -59,7 +63,7 @@ const getActivitiesByDepartment = async (req, res) => {
             return res.status(400).json({ error: 'ID de departamento no válido' });
         }
 
-        // Buscar actividades asociadas al departamento (conversión explícita de departmentId)
+        // Buscar actividades asociadas al departamento
         const activities = await Activity.find({ department: mongoose.Types.ObjectId(departmentId) });
 
         // Si no hay actividades, devolver un mensaje
@@ -73,6 +77,5 @@ const getActivitiesByDepartment = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener las actividades.' });
     }
 };
-
 
 module.exports = { createActivity, getActivitiesByDepartment };

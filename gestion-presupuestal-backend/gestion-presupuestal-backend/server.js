@@ -26,10 +26,10 @@ mongoose
     .catch((error) => console.error('Error al conectar la base de datos:', error));
 
 // Rutas
-app.use('/api/auth', authRoutes); // Rutas de autenticación
-app.use('/api/budgets', budgetRoutes); // Rutas relacionadas con presupuestos
-app.use('/api/departments', departmentRoutes); // Rutas de departamentos
-app.use('/api/activities', activityRoutes); // Rutas de actividades
+app.use('/auth', authRoutes); // Rutas de autenticación
+app.use('/budgets', budgetRoutes); // Rutas relacionadas con presupuestos
+app.use('/departments', departmentRoutes); // Rutas de departamentos
+app.use('/activities', activityRoutes); // Rutas de actividades
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

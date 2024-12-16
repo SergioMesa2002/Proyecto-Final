@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 // Crear un nuevo departamento
-router.post('/create', createDepartment);
+router.post('/', createDepartment);
 
 // Obtener todos los departamentos
 router.get('/', getDepartments);
@@ -19,7 +19,7 @@ router.get('/', getDepartments);
 router.get('/:id', getDepartmentById); // Nueva ruta para obtener un departamento específico
 
 // Actualizar el presupuesto de un departamento
-router.put('/:departmentId/update-budget', updateBudget);
+router.put('/:id', updateBudget);
 
 // Eliminar un departamento
 router.delete('/:id', deleteDepartment);

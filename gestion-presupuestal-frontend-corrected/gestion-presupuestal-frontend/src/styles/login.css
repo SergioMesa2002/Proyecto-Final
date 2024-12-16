@@ -4,7 +4,7 @@
 body {
     background: linear-gradient(135deg, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%);
     --tw-gradient-from: #dbeafe; /* gradient-start */
-    --tw-gradient-to: #93c5fd;   /* gradient-end */
+    --tw-gradient-to: #e12500;   /* gradient-end */
     animation: gradient-animation 6s ease infinite;
   }
   
@@ -12,15 +12,15 @@ body {
   @keyframes gradient-animation {
     0% {
       --tw-gradient-from: #dbeafe;
-      --tw-gradient-to: #93c5fd;
+      --tw-gradient-to: #04ffff;
     }
     50% {
       --tw-gradient-from: #93c5fd;
-      --tw-gradient-to: #2563eb;
+      --tw-gradient-to: #05f7c6;
     }
     100% {
       --tw-gradient-from: #dbeafe;
-      --tw-gradient-to: #93c5fd;
+      --tw-gradient-to: #00f8b1;
     }
   }
   

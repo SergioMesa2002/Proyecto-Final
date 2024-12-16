@@ -1,91 +1,193 @@
-import React, { useState } from 'react';
-import { createBudget } from '../services/apiService';
+import React, { useState, useEffect } from 'react';
+import '../styles/formulario.css'
 
-const CreateBudget = () => {
-  const [budgetData, setBudgetData] = useState({
-    name: '',
-    allocatedAmount: '',
-    spentAmount: 0,
-    alerts: false,
-  });
+const Budgets = () => {
+  const [budgets, setBudgets] = useState([]);
+  const [budgetData, setBudgetData] = useState({ name: '', allocatedAmount: '', spentAmount: 0 });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentId, setCurrentId] = useState(null);
 
-  const handleChange = (e) => {
-    setBudgetData({
-      ...budgetData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleCheckboxChange = (e) => {
-    setBudgetData({
-      ...budgetData,
-      alerts: e.target.checked,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Obtener presupuestos
+  const fetchBudgets = async () => {
     try {
-      // Aquí llamas al servicio para crear el presupuesto
-      const newBudget = await createBudget(budgetData);
-      console.log('Nuevo presupuesto creado:', newBudget);
+      const response = await fetch('http://localhost:5000/budgets');
+      if (!response.ok) {
+        throw new Error('No se pudieron obtener los presupuestos');
+      }
+      const data = await response.json();
+      setBudgets(data);
     } catch (error) {
-      console.error('Error al crear el presupuesto:', error);
+      console.error('Error al obtener los presupuestos:', error);
     }
   };
 
+  useEffect(() => {
+    fetchBudgets();
+  }, []);
+
+  // Manejar cambios en los campos del formulario
+  const handleChange = (e) => {
+    setBudgetData({ ...budgetData, [e.target.name]: e.target.value });
+  };
+
+  // Guardar o actualizar presupuesto
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!budgetData.name || !budgetData.allocatedAmount) {
+      alert('Por favor, complete todos los campos.');
+      return;
+    }
+
+    try {
+      let response;
+      if (currentId) {
+        response = await fetch(`http://localhost:5000/budgets/${currentId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(budgetData),
+        });
+      } else {
+        response = await fetch('http://localhost:5000/budgets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(budgetData),
+        });
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al guardar el presupuesto');
+      }
+
+      alert(`Presupuesto ${currentId ? 'actualizado' : 'creado'} con éxito.`);
+      setModalVisible(false);
+      setBudgetData({ name: '', allocatedAmount: '', spentAmount: 0 });
+      setCurrentId(null);
+      fetchBudgets(); // Actualizar la lista
+    } catch (error) {
+      console.error('Error al guardar el presupuesto:', error);
+      alert('Hubo un error al guardar el presupuesto');
+    }
+  };
+
+  // Eliminar presupuesto
+  const handleDelete = async (id) => {
+    if (!window.confirm('¿Estás seguro de eliminar este presupuesto?')) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/budgets/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al eliminar el presupuesto');
+      }
+
+      alert('Presupuesto eliminado con éxito.');
+      fetchBudgets(); // Actualizar la lista
+    } catch (error) {
+      console.error('Error al eliminar el presupuesto:', error);
+      alert('Hubo un error al eliminar el presupuesto');
+    }
+  };
+
+  // Abrir modal para editar o crear
+  const openModal = (id = null) => {
+    setModalVisible(true);
+    if (id) {
+      const budget = budgets.find((bud) => bud._id === id);
+      if (budget) {
+        setBudgetData({ name: budget.name, allocatedAmount: budget.allocatedAmount, spentAmount: budget.spentAmount });
+        setCurrentId(budget._id);  // Asegurarse de usar el _id
+      }
+    } else {
+      setBudgetData({ name: '', allocatedAmount: '', spentAmount: 0 });
+      setCurrentId(null);
+    }
+  };
+
+  // Cerrar modal
+  const closeModal = () => {
+    setModalVisible(false);
+    setBudgetData({ name: '', allocatedAmount: '', spentAmount: 0 });
+    setCurrentId(null);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-gray-700">Nombre del Presupuesto:</label>
-        <input
-          type="text"
-          name="name"
-          value={budgetData.name}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-gray-700">Monto Asignado:</label>
-        <input
-          type="number"
-          name="allocatedAmount"
-          value={budgetData.allocatedAmount}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-gray-700">Monto Gastado:</label>
-        <input
-          type="number"
-          name="spentAmount"
-          value={budgetData.spentAmount}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div>
-        <label className="block text-gray-700">¿Activar alertas?</label>
-        <input
-          type="checkbox"
-          name="alerts"
-          checked={budgetData.alerts}
-          onChange={handleCheckboxChange}
-          className="h-4 w-4"
-        />
-      </div>
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Crear Presupuesto
-      </button>
-    </form>
+    <div>
+      <h1>Gestión de Presupuestos</h1>
+      <button onClick={() => openModal()}>Crear Presupuesto</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Monto Asignado</th>
+            <th>Monto Gastado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {budgets.map((budget) => (
+            <tr key={budget._id}>
+              <td>{budget.name}</td>
+              <td>{budget.allocatedAmount}</td>
+              <td>{budget.spentAmount}</td>
+              <td>
+                <button onClick={() => openModal(budget._id)}>Editar</button>
+                <button onClick={() => handleDelete(budget._id)}>Eliminar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {modalVisible && (
+        <div className="modal">
+          <h2>{currentId ? 'Editar Presupuesto' : 'Crear Presupuesto'}</h2>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Nombre:
+              <input
+                type="text"
+                name="name"
+                value={budgetData.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Monto Asignado:
+              <input
+                type="number"
+                name="allocatedAmount"
+                value={budgetData.allocatedAmount}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label>
+              Monto Gastado:
+              <input
+                type="number"
+                name="spentAmount"
+                value={budgetData.spentAmount}
+                onChange={handleChange}
+              />
+            </label>
+            <button type="submit">{currentId ? 'Actualizar' : 'Guardar'}</button>
+            <button type="button" onClick={closeModal}>
+              Cancelar
+            </button>
+          </form>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default CreateBudget;
+export default Budgets;
