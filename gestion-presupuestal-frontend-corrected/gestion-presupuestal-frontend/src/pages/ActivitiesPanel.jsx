@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import BudgetPieChart from '../components/BudgetPieChart';
+
 
 const ActivitiesPanel = () => {
     const { departmentId } = useParams(); // Captura el ID del departamento desde la URL
     const [activities, setActivities] = useState([]);
     const [departmentName, setDepartmentName] = useState('');
+    const [totalBudget, setTotalBudget] = useState(0);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true); // Estado de carga
     const navigate = useNavigate();
@@ -28,6 +31,7 @@ const ActivitiesPanel = () => {
             // Actualizar estados con los datos obtenidos
             setActivities(activitiesResponse.data);
             setDepartmentName(departmentResponse.data.name);
+            setTotalBudget(departmentResponse.data.totalBudget); // Guardar el presupuesto total
         } catch (error) {
             console.error('Error al cargar los datos del departamento:', error);
             setError('Hubo un problema al cargar los datos del departamento.');
@@ -63,28 +67,33 @@ const ActivitiesPanel = () => {
             {loading ? (
                 <p>Cargando actividades...</p>
             ) : activities.length > 0 ? (
-                <div>
-                    {activities.map((activity) => (
-                        <div
-                            key={activity._id}
-                            style={{
-                                border: '1px solid #ccc',
-                                padding: '15px',
-                                borderRadius: '8px',
-                                marginBottom: '10px',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                            }}
-                        >
-                            <h3>{activity.name}</h3>
-                            <p>
-                                <strong>Presupuesto:</strong> {activity.budget}
-                            </p>
-                            <p>
-                                <strong>Descripción:</strong> {activity.description || 'Sin descripción'}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                <>
+                    <div>
+                        {activities.map((activity) => (
+                            <div
+                                key={activity._id}
+                                style={{
+                                    border: '1px solid #ccc',
+                                    padding: '15px',
+                                    borderRadius: '8px',
+                                    marginBottom: '10px',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                }}
+                            >
+                                <h3>{activity.name}</h3>
+                                <p>
+                                    <strong>Presupuesto:</strong> {activity.budget}
+                                </p>
+                                <p>
+                                    <strong>Descripción:</strong> {activity.description || 'Sin descripción'}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Gráfico de presupuesto */}
+                    <BudgetPieChart activities={activities} totalBudget={totalBudget} />
+                </>
             ) : (
                 !error && <p>No hay actividades registradas para este departamento.</p>
             )}

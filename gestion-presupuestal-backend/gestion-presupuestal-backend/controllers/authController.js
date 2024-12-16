@@ -36,29 +36,20 @@ const registerUser = async (req, res) => {
 // Iniciar sesión
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
+    console.log('Datos recibidos:', email, password); // Depuración
 
     try {
-        // Validar si el usuario existe
         const user = await User.findOne({ email });
+        console.log('Usuario encontrado:', user); // Verificar si el usuario existe
+
         if (!user) {
             return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
         }
 
-        // Comparar la contraseña
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
-        }
-
-        // Generar un token JWT
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
-        });
-
-        res.status(200).json({ message: 'Inicio de sesión exitoso.', token });
+        console.log('Contraseña correcta:', isMatch); // Verificar coincidencia de contraseña
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
-        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 };
 
