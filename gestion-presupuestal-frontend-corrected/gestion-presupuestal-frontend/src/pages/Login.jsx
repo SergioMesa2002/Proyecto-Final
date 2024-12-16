@@ -1,79 +1,97 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/authService';
+import '../styles/login.css'
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // Manejar cambios en los campos del formulario
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('Iniciando sesión con los datos:', formData); // Log para depuración
-
-      // Llamada al servicio de autenticación
       const response = await loginUser(formData);
-
-      console.log('Respuesta del servidor:', response); // Log para depuración
-
-      // Guardar el token en el almacenamiento local
       localStorage.setItem('token', response.token);
-
-      console.log('Token guardado en localStorage:', localStorage.getItem('token')); // Log para verificar el token
-
-      // Redirigir al Dashboard
       navigate('/dashboard', { replace: true });
     } catch (error) {
-      console.error('Error al iniciar sesión:', error); // Log de errores
       setErrorMessage(error.response?.data?.error || 'Error al iniciar sesión');
     }
   };
 
   return (
-      <div>
-        <h1>Iniciar Sesión</h1>
+    <div className="flex justify-center items-center min-h-screen bg-login-gradient from-login-bg-light via-login-gradient-start to-login-gradient-end">
+      <div className="bg-white shadow-login-card rounded-login-card max-w-md w-full p-8">
+        <h1 className="text-3xl font-bold text-login-primary mb-4 text-center">
+          Bienvenido de nuevo
+        </h1>
+        <p className="text-login-text-light text-center mb-6">
+          Ingresa tus credenciales para continuar.
+        </p>
 
-        {/* Mostrar mensaje de error si ocurre */}
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {errorMessage && (
+          <div className="bg-red-50 border border-red-300 text-red-600 px-4 py-3 rounded-lg mb-4">
+            {errorMessage}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            Correo Electrónico:
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-login-text-light">
+              Correo Electrónico
+            </label>
             <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="tu@correo.com"
+              required
+              className="block w-full px-4 py-2 border border-gray-300 rounded-login-input shadow-sm focus:outline-none focus:ring-2 focus:ring-login-primary focus:border-login-primary transition-login"
             />
-          </label>
-          <br />
-          <label>
-            Contraseña:
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-login-text-light">
+              Contraseña
+            </label>
             <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Contraseña"
+              required
+              className="block w-full px-4 py-2 border border-gray-300 rounded-login-input shadow-sm focus:outline-none focus:ring-2 focus:ring-login-primary focus:border-login-primary transition-login"
             />
-          </label>
-          <br />
-          <button type="submit">Ingresar</button>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-login-primary text-white rounded-login-button shadow-login-button hover:bg-login-primary-light hover:shadow-login-button-hover transition-login transform hover:-translate-y-1"
+          >
+            Iniciar Sesión
+          </button>
         </form>
 
-        <p>
-          ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
+        <p className="mt-4 text-center text-sm text-login-text-light">
+          ¿No tienes una cuenta?{' '}
+          <a
+            href="/register"
+            className="text-login-secondary font-medium hover:text-login-primary-light hover:underline transition-login"
+          >
+            Regístrate aquí
+          </a>
         </p>
       </div>
+    </div>
   );
 };
 
-export default Login;
+export default Login;
