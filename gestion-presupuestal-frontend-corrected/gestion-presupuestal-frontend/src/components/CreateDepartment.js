@@ -10,7 +10,7 @@ const Departments = () => {
   // Obtener departamentos
   const fetchDepartments = async () => {
     try {
-      const response = await fetch('http://localhost:5000/departments');
+      const response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/departments');
       if (!response.ok) {
         throw new Error('No se pudieron obtener los departamentos');
       }
@@ -41,7 +41,7 @@ const Departments = () => {
     try {
       let response;
       if (currentId) {
-        response = await fetch(`http://localhost:5000/departments/${currentId}`, {
+        response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/departments/${currentId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const Departments = () => {
           body: JSON.stringify(departmentData),
         });
       } else {
-        response = await fetch('http://localhost:5000/departments', {
+        response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/departments', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const Departments = () => {
     if (!window.confirm('¿Estás seguro de eliminar este departamento?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/departments/${id}`, {
+      const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/departments/${id}`, {
         method: 'DELETE',
       });
 

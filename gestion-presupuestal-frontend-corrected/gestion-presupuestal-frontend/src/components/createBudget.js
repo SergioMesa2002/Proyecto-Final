@@ -10,7 +10,7 @@ const Budgets = () => {
   // Obtener presupuestos
   const fetchBudgets = async () => {
     try {
-      const response = await fetch('http://localhost:5000/budgets');
+      const response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/budgets');
       if (!response.ok) {
         throw new Error('No se pudieron obtener los presupuestos');
       }
@@ -41,7 +41,7 @@ const Budgets = () => {
     try {
       let response;
       if (currentId) {
-        response = await fetch(`http://localhost:5000/budgets/${currentId}`, {
+        response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/budgets/${currentId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ const Budgets = () => {
           body: JSON.stringify(budgetData),
         });
       } else {
-        response = await fetch('http://localhost:5000/budgets', {
+        response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/budgets', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

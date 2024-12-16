@@ -16,7 +16,7 @@ const Activities = () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5000/activities/${departmentId}`);
+        const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/${departmentId}`);
         if (!response.ok) {
             const errorData = await response.json();  // Obtener detalles del error
             throw new Error(errorData.error || 'No se pudieron obtener las actividades');
@@ -31,7 +31,7 @@ const Activities = () => {
   // Obtener departamentos
   const fetchDepartments = async () => {
     try {
-      const response = await fetch('http://localhost:5000/departments');
+      const response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/departments');
       if (!response.ok) {
         throw new Error('No se pudieron obtener los departamentos');
       }
@@ -62,7 +62,7 @@ const Activities = () => {
     try {
       let response;
       if (currentId) {
-        response = await fetch(`http://localhost:5000/activities/${currentId}`, {
+        response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/activities/${currentId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const Activities = () => {
           body: JSON.stringify(activityData),
         });
       } else {
-        response = await fetch('http://localhost:5000/activities', {
+        response = await fetch('https://backend-proyectofinal-4qkh.onrender.com/activities', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const Activities = () => {
     if (!window.confirm('¿Estás seguro de eliminar esta actividad?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/activities/${id}`, {
+      const response = await fetch(`https://backend-proyectofinal-4qkh.onrender.com/activities/${id}`, {
         method: 'DELETE',
       });
 
