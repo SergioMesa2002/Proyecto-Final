@@ -36,6 +36,22 @@ const getDepartments = async (req, res) => {
     }
 };
 
+// Obtener un departamento por ID
+const getDepartmentById = async (req, res) => {
+    const { id } = req.params; // Capturar el ID desde los parámetros
+
+    try {
+        const department = await Department.findById(id); // Busca el departamento por su ID
+        if (!department) {
+            return res.status(404).json({ error: 'Departamento no encontrado' }); // Devuelve error si no existe
+        }
+        res.status(200).json(department); // Devuelve el departamento encontrado
+    } catch (error) {
+        console.error('Error al obtener el departamento:', error);
+        res.status(500).json({ error: 'Error al obtener el departamento' }); // Devuelve error interno si algo falla
+    }
+};
+
 // Actualizar el presupuesto de un departamento
 const updateBudget = async (req, res) => {
     const { departmentId } = req.params; // ID del departamento desde la URL
@@ -91,6 +107,8 @@ const deleteDepartment = async (req, res) => {
 module.exports = {
     createDepartment,
     getDepartments,
+    getDepartmentById, // Exportar el nuevo método
     updateBudget,
     deleteDepartment,
 };
+

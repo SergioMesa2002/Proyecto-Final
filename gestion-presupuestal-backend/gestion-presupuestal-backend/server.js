@@ -6,25 +6,42 @@ const budgetRoutes = require('./routes/budgetRoutes');
 const authRoutes = require('./routes/authRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const activityRoutes = require('./routes/activityRoutes');
-dotenv.config(); // Cargar las variables de entorno
 
-const app = express(); // Inicializar la aplicación Express
-app.use(cors());
-app.use(express.json());
+// Cargar variables de entorno
+dotenv.config();
+
+const app = express(); // Inicializar aplicación Express
+
+// Middlewares globales
+app.use(cors()); // Habilitar CORS
+app.use(express.json()); // Parsear JSON en las solicitudes
 
 // Conexión a la base de datos
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-    .then(() => console.log('Database connected successfully'))
-    .catch((error) => console.error('Database connection error:', error));
+mongoose
+    .connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('Base de datos conectada correctamente'))
+    .catch((error) => console.error('Error al conectar la base de datos:', error));
 
 // Rutas
-app.use('/api/auth', authRoutes);
-app.use('/api/budgets', budgetRoutes);
-app.use('/api/departments', departmentRoutes);
-app.use('/api/activities', activityRoutes);
+app.use('/api/auth', authRoutes); // Rutas de autenticación
+app.use('/api/budgets', budgetRoutes); // Rutas relacionadas con presupuestos
+app.use('/api/departments', departmentRoutes); // Rutas de departamentos
+app.use('/api/activities', activityRoutes); // Rutas de actividades
+
+// Manejo de rutas no encontradas
+app.use((req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Manejo global de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
+
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));

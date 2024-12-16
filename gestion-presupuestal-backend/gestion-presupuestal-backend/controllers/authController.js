@@ -1,52 +1,56 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const User = require('../models/User'); // Modelo de usuario
+const bcrypt = require('bcrypt'); // Para encriptar contraseñas
+const jwt = require('jsonwebtoken'); // Para generar tokens
+require('dotenv').config(); // Para acceder a variables de entorno
 
 // Registrar un nuevo usuario
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
-    try {
-        // Cifrar la contraseña
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Crear el usuario con la contraseña cifrada
-        const user = new User({ name, email, password: hashedPassword });
-        await user.save();
-        res.status(201).json({ message: 'Usuario registrado con éxito' });
+    try {
+        // Validar si el usuario ya existe
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: 'El correo electrónico ya está registrado.' });
+        }
+
+        // Encriptar la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Crear un nuevo usuario
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+        });
+
+        await newUser.save();
+
+        res.status(201).json({ message: 'Usuario registrado con éxito.', userId: newUser._id });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al registrar el usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 };
 
 // Iniciar sesión
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
+    console.log('Datos recibidos:', email, password); // Depuración
+
     try {
         const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+        console.log('Usuario encontrado:', user); // Verificar si el usuario existe
+
+        if (!user) {
+            return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ error: 'Contraseña incorrecta' });
-
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+        console.log('Contraseña correcta:', isMatch); // Verificar coincidencia de contraseña
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error al iniciar sesión:', error);
     }
 };
 
-// Obtener todos los usuarios
-const getUsers = async (req, res) => {
-    try {
-        const users = await User.find(); // Recupera todos los usuarios
-        res.status(200).json(users); // Retorna los usuarios como respuesta
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-module.exports = { registerUser, loginUser, getUsers };
-
-
-
+module.exports = { registerUser, loginUser };
